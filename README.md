@@ -26,7 +26,7 @@ The app is not ready for installation or external use yet. We’re currently set
 
 - **HTTP Status Codes**
 
-  - `200 OK`, `201 Created`, `204 No Content`
+  - `200 OK`,
   - `400 Bad Request`, `404 Not Found`, `500 Server Error`
 
 - **Docs & Versioning**

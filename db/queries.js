@@ -1,14 +1,9 @@
 const pool = require("./pool");
 
-async function getAllFoods(page = 1, limit = 100) {
-  const offset = (page - 1) * limit;
-  const query = `
-    SELECT *
-    FROM branded_open_foods
-    LIMIT $1 OFFSET $2;
-  `;
-  const { rows } = await pool.query(query, [limit, offset]);
-  return rows;
+async function getFoods(limit, offset) {
+  const query = `SELECT * FROM branded_open_foods ORDER BY code LIMIT $1 OFFSET $2`;
+  const result = await pool.query(query, [limit, offset]);
+  return result.rows;
 }
 
 async function getFoodById(upc) {
@@ -21,7 +16,13 @@ async function getFoodById(upc) {
   return rows[0];
 }
 
+async function countFoods() {
+  const result = await pool.query(`SELECT COUNT(*) FROM branded_open_foods`);
+  return parseInt(result.rows[0].count, 10);
+}
+
 module.exports = {
-  getAllFoods,
+  getFoods,
   getFoodById,
+  countFoods,
 };

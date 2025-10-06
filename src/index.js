@@ -4,17 +4,22 @@ require("dotenv").config();
 
 const express = require("express");
 const app = express();
+const cors = require("cors");
 
 const foodsRouter = require("./routes/foodsRouter");
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
+app.use(cors());
+
 app.use("/api/v1/foods", foodsRouter);
 
 app.get("/", (req, res) => {
   res.render("index", { message: "EJS rocks!" });
 });
+
+app.use("/foods", express.static(path.join(__dirname, "public")));
 
 app.use((err, req, res, next) => {
   console.error(err);
