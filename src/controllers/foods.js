@@ -1,16 +1,28 @@
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
+const BadRequestError = require("../errors/BadRequestError");
 const path = require("path");
 const db = require("../../db/queries");
 
 async function getFoods(req, res, next) {
   try {
-    const page = parseInt(req.query.page, 10) || 1;
-    const limit = parseInt(req.query.limit, 10) || 100;
-    const offset = (page - 1) * limit;
+    const page = parseInt(req.query.page, 10);
+    const limit = parseInt(req.query.limit, 10);
 
-    // Fetch data
+    if (
+      (req.query.page && (isNaN(page) || page <= 0)) ||
+      (req.query.limit && (isNaN(limit) || limit <= 0))
+    ) {
+      throw new BadRequestError(
+        "'page' and 'limit' must be positive integers."
+      );
+    }
+
+    const validPage = page || 1;
+    const validLimit = limit || 100;
+    const offset = (validPage - 1) * validLimit;
+
     const [foods, totalCount] = await Promise.all([
-      db.getFoods(limit, offset),
+      db.getFoods(validLimit, offset),
       db.countFoods(),
     ]);
 
@@ -21,10 +33,10 @@ async function getFoods(req, res, next) {
     res.json({
       data: foods,
       metadata: {
-        page,
-        limit,
+        page: validPage,
+        limit: validLimit,
         totalItems: totalCount,
-        totalPages: Math.ceil(totalCount / limit),
+        totalPages: Math.ceil(totalCount / validLimit),
       },
     });
   } catch (err) {
@@ -32,16 +44,23 @@ async function getFoods(req, res, next) {
   }
 }
 
-async function getFoodById(req, res) {
-  const foodId = req.params.foodId;
+async function getFoodById(req, res, next) {
+  try {
+    const foodId = parseInt(req.params.foodId);
 
-  const foodProduct = await db.getFoodById(Number(foodId));
+    if (isNaN(foodId) || foodId <= 0) {
+      throw new BadRequestError("product code must be a positive integer.");
+    }
+    const foodProduct = await db.getFoodById(Number(foodId));
 
-  if (!foodProduct) {
-    throw new CustomNotFoundError("Food product not found");
+    if (!foodProduct) {
+      throw new CustomNotFoundError("Food product not found");
+    }
+
+    res.json(foodProduct);
+  } catch (err) {
+    next(err);
   }
-
-  res.json(foodProduct);
 }
 
 module.exports = {
