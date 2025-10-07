@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { getFoodById, getFoods } = require("../controllers/foods");
+const { getFoodById, getFoods } = require("../../controllers/foods");
 
 const foodsRouter = Router();
 

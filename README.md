@@ -22,6 +22,8 @@ The app is not ready for installation or external use yet. We’re currently set
 
 - **Filtering / Sorting / Pagination**
 
+  - `/foods?category=poultry`
+  - `/foods?brand=Nestle`
   - `/foods?page=2&limit=50`
 
 - **HTTP Status Codes**
