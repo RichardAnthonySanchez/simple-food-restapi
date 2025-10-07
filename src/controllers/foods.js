@@ -1,7 +1,7 @@
 const CustomNotFoundError = require("../errors/CustomNotFoundError");
 const BadRequestError = require("../errors/BadRequestError");
 const path = require("path");
-const db = require("../../db/queries");
+const db = require("../db/queries");
 
 async function getFoods(req, res, next) {
   try {

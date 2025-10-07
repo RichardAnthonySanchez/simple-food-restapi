@@ -2,74 +2,124 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Pagination Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple Foods API Docs</title>
     <style>
       body {
-        font-family: sans-serif;
-        padding: 20px;
+        font-family: system-ui, sans-serif;
+        line-height: 1.6;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+        color: #222;
       }
-      .item {
-        margin-bottom: 8px;
+
+      h1,
+      h2 {
+        color: #111;
       }
-      .controls {
-        margin-top: 20px;
+
+      code {
+        background: #f3f3f3;
+        padding: 0.2em 0.4em;
+        border-radius: 4px;
+        font-family: monospace;
       }
-      button {
-        margin: 0 5px;
-        padding: 6px 12px;
+
+      pre {
+        background: #f7f7f7;
+        padding: 1rem;
+        border-radius: 6px;
+        overflow-x: auto;
+      }
+
+      hr {
+        margin: 3rem 0;
       }
     </style>
   </head>
   <body>
-    <h1>Pagination Test</h1>
-    <div id="results"></div>
-    <div class="controls">
-      <button id="prevBtn">Previous</button>
-      <span id="pageInfo"></span>
-      <button id="nextBtn">Next</button>
-    </div>
+    <header>
+      <h1>Simple Foods API (v1)</h1>
+      <p>
+        A REST API for retrieving information about food products with three
+        ingredients or fewer.
+      </p>
+      <p><strong>Status:</strong> Early development</p>
+    </header>
 
-    <script>
-      let currentPage = 1;
-      const limit = 10; // how many items per page
-      const resultsDiv = document.getElementById("results");
-      const pageInfo = document.getElementById("pageInfo");
+    <hr />
 
-      async function fetchPage(page) {
-        try {
-          const res = await fetch(
-            `http://localhost:3000/api/v1/foods?page=${page}&limit=${limit}`
-          );
-          if (!res.ok) throw new Error(`Error: ${res.status}`);
-          const data = await res.json();
+    <section id="getting-started">
+      <h2>Getting Started</h2>
+      <p>
+        Base URL:
+        <code>https://api.simplefoods.dev/api/v1</code>
+      </p>
 
-          // Assuming your API returns { data: [], metadata: { page, totalPages } }
-          resultsDiv.innerHTML = data.data
-            .map((item) => `<div class="item">${item.product_name}</div>`)
-            .join("");
+      <p>Example request:</p>
+      <pre><code>GET /foods</code></pre>
 
-          currentPage = data.metadata.page;
-          pageInfo.textContent = `Page ${data.metadata.page} of ${data.metadata.totalPages}`;
+      <p>Typical usage:</p>
+      <ul>
+        <li><code>/foods?category=poultry</code> – Filter by category</li>
+        <li><code>/foods?brand=Nestle</code> – Filter by brand</li>
+        <li><code>/foods?page=2&amp;limit=50</code> – Paginate results</li>
+      </ul>
+    </section>
 
-          // Disable/enable buttons
-          document.getElementById("prevBtn").disabled = currentPage === 1;
-          document.getElementById("nextBtn").disabled =
-            currentPage === data.metadata.totalPages;
-        } catch (err) {
-          resultsDiv.innerHTML = `<p style="color:red">${err.message}</p>`;
-        }
-      }
+    <hr />
 
-      document.getElementById("prevBtn").addEventListener("click", () => {
-        if (currentPage > 1) fetchPage(currentPage - 1);
-      });
+    <section id="typical-responses">
+      <h2>Typical Responses</h2>
 
-      document.getElementById("nextBtn").addEventListener("click", () => {
-        fetchPage(currentPage + 1);
-      });
+      <h3><code>GET /foods</code></h3>
+      <pre><code>{
+  "data": [
+    {
+      "id": 1,
+      "name": "Plain Yogurt",
+      "brand": "Chobani",
+      "ingredients": ["Milk", "Cultures"]
+    }
+  ],
+  "page": 1,
+  "total": 1
+}</code></pre>
 
-      // Load the first page on startup
-      fetchPage(currentPage);
-    </script>
+      <h3><code>GET /foods/:id</code></h3>
+      <pre><code>{
+  "id": 1,
+  "name": "Plain Yogurt",
+  "brand": "Chobani",
+  "ingredients": ["Milk", "Cultures"]
+}</code></pre>
+    </section>
+
+    <hr />
+
+    <section id="error-handling">
+      <h2>Error Handling</h2>
+      <p>The API returns standard HTTP status codes:</p>
+      <ul>
+        <li><code>200 OK</code> – Successful request</li>
+        <li><code>400 Bad Request</code> – Invalid parameters</li>
+        <li><code>404 Not Found</code> – Resource not found</li>
+        <li><code>500 Server Error</code> – Internal issue</li>
+      </ul>
+
+      <p>Example error response:</p>
+      <pre><code>{
+  "error": "Food not found"
+}</code></pre>
+    </section>
+
+    <hr />
+
+    <footer>
+      <p>
+        <small> Simple Foods API Docs – Version 1.0 (WIP) </small>
+      </p>
+    </footer>
   </body>
 </html>

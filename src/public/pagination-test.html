@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pagination Test</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        padding: 20px;
+      }
+      .item {
+        margin-bottom: 8px;
+      }
+      .controls {
+        margin-top: 20px;
+      }
+      button {
+        margin: 0 5px;
+        padding: 6px 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Pagination Test</h1>
+    <div id="results"></div>
+    <div class="controls">
+      <button id="prevBtn">Previous</button>
+      <span id="pageInfo"></span>
+      <button id="nextBtn">Next</button>
+    </div>
+
+    <script>
+      let currentPage = 1;
+      const limit = 10; // how many items per page
+      const resultsDiv = document.getElementById("results");
+      const pageInfo = document.getElementById("pageInfo");
+
+      async function fetchPage(page) {
+        try {
+          const res = await fetch(
+            `http://localhost:3000/api/v1/foods?page=${page}&limit=${limit}`
+          );
+          if (!res.ok) throw new Error(`Error: ${res.status}`);
+          const data = await res.json();
+
+          // Assuming your API returns { data: [], metadata: { page, totalPages } }
+          resultsDiv.innerHTML = data.data
+            .map((item) => `<div class="item">${item.product_name}</div>`)
+            .join("");
+
+          currentPage = data.metadata.page;
+          pageInfo.textContent = `Page ${data.metadata.page} of ${data.metadata.totalPages}`;
+
+          // Disable/enable buttons
+          document.getElementById("prevBtn").disabled = currentPage === 1;
+          document.getElementById("nextBtn").disabled =
+            currentPage === data.metadata.totalPages;
+        } catch (err) {
+          resultsDiv.innerHTML = `<p style="color:red">${err.message}</p>`;
+        }
+      }
+
+      document.getElementById("prevBtn").addEventListener("click", () => {
+        if (currentPage > 1) fetchPage(currentPage - 1);
+      });
+
+      document.getElementById("nextBtn").addEventListener("click", () => {
+        fetchPage(currentPage + 1);
+      });
+
+      // Load the first page on startup
+      fetchPage(currentPage);
+    </script>
+  </body>
+</html>

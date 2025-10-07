@@ -15,11 +15,7 @@ app.use(cors());
 
 app.use("/api/v1/foods", foodsRouter);
 
-app.get("/", (req, res) => {
-  res.render("index", { message: "EJS rocks!" });
-});
-
-app.use("/foods", express.static(path.join(__dirname, "public")));
+app.use("/", express.static(path.join(__dirname, "public")));
 
 app.use((err, req, res, next) => {
   console.error(err);
