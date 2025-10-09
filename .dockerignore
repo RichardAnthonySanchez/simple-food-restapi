@@ -5,3 +5,8 @@ bar
 # misc
 npm-debug.log
 .git
+
+# dotenv environment variable files
+.env
+.env.*
+!.env.example

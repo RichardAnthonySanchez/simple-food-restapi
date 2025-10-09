@@ -1,0 +1,26 @@
+services:
+  db:
+    image: postgres:14.19
+    container_name: simplefoods-db
+    environment:
+      POSTGRES_USER: tony
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: simple_foods
+    volumes:
+      - ./docker/db/db.sql:/docker-entrypoint-initdb.d/db.sql
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    container_name: simplefoods-app
+    depends_on:
+      - db
+    environment:
+      HOST: 0.0.0.0
+      DB_HOST: db
+      DB_USER: tony
+      DB_PASS: password
+      DB_NAME: simple_foods
+    ports:
+      - "3000:3000"

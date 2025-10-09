@@ -5,7 +5,7 @@ const dbPass = process.env.DB_PASS;
 const { Pool } = require("pg");
 
 module.exports = new Pool({
-  host: dbHost || "host.docker.internal",
+  host: dbHost,
   user: dbUser,
   database: "simple_foods",
   password: dbPass,
