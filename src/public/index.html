@@ -36,6 +36,19 @@
       hr {
         margin: 3rem 0;
       }
+
+      .endpoint {
+        margin-bottom: 1rem;
+      }
+
+      .endpoint a {
+        color: #0070f3;
+        text-decoration: none;
+      }
+
+      .endpoint a:hover {
+        text-decoration: underline;
+      }
     </style>
   </head>
   <body>
@@ -54,7 +67,7 @@
       <h2>Getting Started</h2>
       <p>
         Base URL:
-        <code>https://api.simplefoods.dev/api/v1</code>
+        <code>https://simple-food-api.tonysancez.dev/api/v1</code>
       </p>
 
       <p>Example request:</p>
@@ -112,6 +125,49 @@
       <pre><code>{
   "error": "Food not found"
 }</code></pre>
+    </section>
+
+    <hr />
+
+    <section id="health-check">
+      <h2>Health Check Monitor</h2>
+      <p>
+        Check the server health programmatically via the endpoint or view a
+        visual dashboard.
+      </p>
+
+      <div class="endpoint">
+        <strong>Health Endpoint:</strong> <code>GET /health</code>
+        <pre><code>{
+  "uptime": "13 minutes, 31 seconds",
+  "message": "OK",
+  "timestamp": "Monday, October 13th, 2025 at 6:34:14 AM"
+}</code></pre>
+      </div>
+
+      <div class="endpoint">
+        <strong>Public Dashboard:</strong>
+        <a href="/health.html" target="_blank">View Health Monitor</a>
+        <p>
+          Displays uptime, status message, and timestamp in a simple dashboard.
+        </p>
+      </div>
+    </section>
+
+    <hr />
+
+    <section id="pagination-example">
+      <h2>Pagination Example</h2>
+      <p>
+        For examples of pagination implementation, you can view the static page:
+        <a href="/pagination-test.html" target="_blank"
+          >Pagination Example Page</a
+        >
+      </p>
+      <p>
+        This page demonstrates how paginated results are handled and displayed
+        in the UI.
+      </p>
     </section>
 
     <hr />
