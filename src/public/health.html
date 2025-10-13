@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Health Status</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        color: #333;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+      h1 {
+        margin-bottom: 1rem;
+      }
+      .card {
+        background: #fff;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        min-width: 300px;
+      }
+      .field {
+        margin: 0.5rem 0;
+        font-size: 1.1rem;
+      }
+      .label {
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Server Health</h1>
+    <div class="card">
+      <div class="field">
+        <span class="label">Message:</span> <span id="message">Loading...</span>
+      </div>
+      <div class="field">
+        <span class="label">Uptime:</span> <span id="uptime">Loading...</span>
+      </div>
+      <div class="field">
+        <span class="label">Timestamp:</span>
+        <span id="timestamp">Loading...</span>
+      </div>
+    </div>
+
+    <script>
+      async function fetchHealth() {
+        try {
+          const res = await fetch(`/api/v1/health`);
+          if (!res.ok) throw new Error("Network response not OK");
+          const data = await res.json();
+
+          document.getElementById("message").textContent = data.message;
+          document.getElementById("uptime").textContent = data.uptime;
+          document.getElementById("timestamp").textContent = data.timestamp;
+        } catch (err) {
+          console.error(err);
+          document.getElementById("message").textContent =
+            "Error fetching health";
+          document.getElementById("uptime").textContent = "-";
+          document.getElementById("timestamp").textContent = "-";
+        }
+      }
+
+      fetchHealth();
+
+      setInterval(fetchHealth, 10000);
+    </script>
+  </body>
+</html>
