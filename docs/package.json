@@ -1,0 +1,11 @@
+{
+  "name": "simple-food-docs",
+  "version": "1.0.0",
+  "description": "Docs for simple foods REST API",
+  "type": "module",
+  "scripts": {
+    "docs:dev": "vitepress dev",
+    "docs:build": "vitepress build",
+    "docs:preview": "vitepress preview"
+  }
+}
