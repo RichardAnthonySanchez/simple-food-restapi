@@ -37,7 +37,7 @@
 
       async function fetchPage(page) {
         try {
-          const res = await fetch(`/api/v1/foods?page=${page}&limit=${limit}`);
+          const res = await fetch(`./api/v1/foods?page=${page}&limit=${limit}`);
           if (!res.ok) throw new Error(`Error: ${res.status}`);
           const data = await res.json();
 

@@ -29,6 +29,10 @@ export default defineConfig({
         items: [
           { text: "GET Foods", link: "/api-methods/get-foods" },
           { text: "GET Foods By Id", link: "/api-methods/get-foodsbyid" },
+          {
+            text: "GET Foods By Filtering",
+            link: "/api-methods/get-food-filter",
+          },
           { text: "GET Server Uptime", link: "/api-methods/health" },
         ],
       },

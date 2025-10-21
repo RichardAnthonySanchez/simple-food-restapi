@@ -63,7 +63,33 @@ async function getFoodById(req, res, next) {
   }
 }
 
+async function getFoodsByCriteria(req, res, next) {
+  try {
+    const { category, maxCalories } = req.query;
+
+    if (!category || !maxCalories) {
+      throw new BadRequestError(
+        "Both 'category' and 'maxCalories' are required."
+      );
+    }
+
+    const foods = await db.getFoodsByCriteria(
+      category,
+      parseFloat(maxCalories)
+    );
+
+    if (!foods || foods.length === 0) {
+      throw new CustomNotFoundError("No matching foods found.");
+    }
+
+    res.json({ data: foods });
+  } catch (err) {
+    next(err);
+  }
+}
+
 module.exports = {
   getFoods,
   getFoodById,
+  getFoodsByCriteria,
 };

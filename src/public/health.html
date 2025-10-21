@@ -52,7 +52,7 @@
     <script>
       async function fetchHealth() {
         try {
-          const res = await fetch(`/api/v1/health`);
+          const res = await fetch(`./api/v1/health`);
           if (!res.ok) throw new Error("Network response not OK");
           const data = await res.json();
 

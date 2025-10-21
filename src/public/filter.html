@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Filter Foods</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 2rem auto;
+        max-width: 700px;
+        padding: 1rem;
+      }
+      form {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        font-weight: bold;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+      .results {
+        display: grid;
+        gap: 1rem;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .card h3 {
+        margin: 0 0 0.25rem;
+      }
+      .card small {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Filter Foods</h1>
+
+    <form id="filterForm">
+      <label>
+        Category
+        <input
+          type="text"
+          id="categoryInput"
+          placeholder="e.g. snack"
+          required
+        />
+      </label>
+
+      <label>
+        Max Calories
+        <select id="caloriesSelect" required>
+          <option value="">Select...</option>
+          <option value="100">100 kcal</option>
+          <option value="200">200 kcal</option>
+          <option value="300">300 kcal</option>
+          <option value="400">400 kcal</option>
+          <option value="500">500 kcal</option>
+        </select>
+      </label>
+
+      <button type="submit">Filter</button>
+    </form>
+
+    <section class="results" id="results"></section>
+
+    <script>
+      const form = document.getElementById("filterForm");
+      const results = document.getElementById("results");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        results.innerHTML = "<p>Loading...</p>";
+
+        const category = document.getElementById("categoryInput").value.trim();
+        const maxCalories = document.getElementById("caloriesSelect").value;
+
+        try {
+          const res = await fetch(
+            `./api/v1/foods/filter?category=${encodeURIComponent(
+              category
+            )}&maxCalories=${maxCalories}`
+          );
+          const data = await res.json();
+
+          if (!data.data || data.data.length === 0) {
+            results.innerHTML = "<p>No matching foods found.</p>";
+            return;
+          }
+
+          results.innerHTML = data.data
+            .map(
+              (food) => `
+          <div class="card">
+            <h3>${food.product_name || "Unknown Product"}</h3>
+            <small><strong>Brand:</strong> ${
+              food.brand_owner || "N/A"
+            }</small><br/>
+            <small><strong>Calories:</strong> ${
+              food.energy_kcal_100g || "N/A"
+            } </small>
+          </div>
+        `
+            )
+            .join("");
+        } catch (err) {
+          console.error(err);
+          results.innerHTML = "<p>Error fetching results.</p>";
+        }
+      });
+    </script>
+  </body>
+</html>
