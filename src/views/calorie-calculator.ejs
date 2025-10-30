@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title><%= title %></title>
+  <meta name="description" content="Use our calorie calculator to find foods by category and calorie range. Perfect for meal planning and tracking your daily intake.">
+  <link rel="canonical" href="./tools/calorie-calculator" />
+    <style>
+      body {
+        font-family: sans-serif;
+        margin: 2rem auto;
+        max-width: 700px;
+        padding: 1rem;
+      }
+      form {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        margin-bottom: 2rem;
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        font-weight: bold;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+      }
+      .results {
+        display: grid;
+        gap: 1rem;
+      }
+      .card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 1rem;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .card h3 {
+        margin: 0 0 0.25rem;
+      }
+      .card small {
+        color: #666;
+      }
+    </style>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+
+    <form method="get" action="/tools/calorie-calculator">
+      <label>
+        Category
+        <input
+          type="text"
+          name="category"
+          placeholder="e.g. snack"
+          value="<%= query.category || '' %>"
+          required
+        />
+      </label>
+
+      <label>
+        Max Calories
+        <select name="maxCalories" required>
+          <option value="">Select...</option>
+          <% [100,200,300,400,500].forEach(kcal => { %>
+            <option value="<%= kcal %>" <%= query.maxCalories == kcal ? 'selected' : '' %>>
+              <%= kcal %> kcal
+            </option>
+          <% }) %>
+        </select>
+      </label>
+
+      <button type="submit">Filter</button>
+    </form>
+
+    <section class="results">
+      <% if (foods && foods.length > 0) { %>
+        <% foods.forEach(food => { %>
+          <div class="card">
+            <h3><%= food.product_name || "Unknown Product" %></h3>
+            <small><strong>Brand:</strong> <%= food.brand_owner || "N/A" %></small><br/>
+            <small><strong>Calories:</strong> <%= food.energy_kcal_100g || "N/A" %></small>
+          </div>
+        <% }) %>
+      <% } else if (query.category && query.maxCalories) { %>
+        <p>No matching foods found.</p>
+      <% } %>
+    </section>
+  </body>
+</html>

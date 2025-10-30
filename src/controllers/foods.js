@@ -63,26 +63,46 @@ async function getFoodById(req, res, next) {
   }
 }
 
+async function fetchFoodsByCriteria(category, maxCalories) {
+  if (!category || !maxCalories) {
+    throw new BadRequestError(
+      "Both 'category' and 'maxCalories' are required."
+    );
+  }
+
+  const foods = await db.getFoodsByCriteria(category, parseFloat(maxCalories));
+
+  if (!foods || foods.length === 0) {
+    throw new CustomNotFoundError("No matching foods found.");
+  }
+
+  return foods;
+}
+
 async function getFoodsByCriteria(req, res, next) {
   try {
     const { category, maxCalories } = req.query;
-
-    if (!category || !maxCalories) {
-      throw new BadRequestError(
-        "Both 'category' and 'maxCalories' are required."
-      );
-    }
-
-    const foods = await db.getFoodsByCriteria(
-      category,
-      parseFloat(maxCalories)
-    );
-
-    if (!foods || foods.length === 0) {
-      throw new CustomNotFoundError("No matching foods found.");
-    }
-
+    const foods = await fetchFoodsByCriteria(category, maxCalories);
     res.json({ data: foods });
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getCalorieCalculator(req, res, next) {
+  try {
+    const { category, maxCalories } = req.query;
+    let foods = [];
+
+    if (category && maxCalories) {
+      foods = await fetchFoodsByCriteria(category, maxCalories);
+    }
+
+    res.render("calorie-calculator", {
+      title: "Calorie Calculator",
+      foods,
+      query: req.query,
+    });
   } catch (err) {
     next(err);
   }
@@ -92,4 +112,6 @@ module.exports = {
   getFoods,
   getFoodById,
   getFoodsByCriteria,
+  fetchFoodsByCriteria,
+  getCalorieCalculator,
 };

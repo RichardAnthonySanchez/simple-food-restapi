@@ -5,14 +5,15 @@ const app = express();
 
 const foodsRouter = require("./routes/v1/foodsRouter");
 const healthRouter = require("./routes/v1/health/healthRouter");
+const toolsRouter = require("./routes/v1/tools/toolsRouter");
 
-/*
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-*/
 
 app.use("/api/v1/foods", foodsRouter);
 app.use("/api/v1/health", healthRouter);
+
+app.use("/tools", toolsRouter);
 
 app.use("/", express.static(path.join(__dirname, "public")));
 

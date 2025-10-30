@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://simple-food-api.tonysanchez.dev/sitemap.xml
