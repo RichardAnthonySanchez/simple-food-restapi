@@ -1,6 +1,8 @@
 const path = require("node:path");
 
 const express = require("express");
+const cors = require("cors");
+
 const app = express();
 
 const foodsRouter = require("./routes/v1/foodsRouter");
@@ -9,6 +11,8 @@ const toolsRouter = require("./routes/v1/tools/toolsRouter");
 
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
+
+app.use(cors());
 
 app.use("/api/v1/foods", foodsRouter);
 app.use("/api/v1/health", healthRouter);

@@ -23,6 +23,7 @@
   },
   "homepage": "https://github.com/RichardAnthonySanchez/simple-food-restapi#readme",
   "dependencies": {
+    "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "ejs": "^3.1.10",
     "express": "^5.1.0",
