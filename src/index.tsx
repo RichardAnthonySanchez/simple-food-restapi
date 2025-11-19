@@ -1,12 +1,10 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
-//import { serveStatic } from "@hono/node-server/serve-static";
+import { serveStatic } from "@hono/node-server/serve-static";
 
 const app = new Hono();
 
-app.get("/", (c) => {
-  return c.text("Hello Hono!");
-});
+app.use("/*", serveStatic({ root: "./src/public" }));
 
 serve(
   {
