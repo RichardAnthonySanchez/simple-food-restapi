@@ -2,21 +2,12 @@ import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
 
-import { Pool } from "pg";
+import { pool } from "./db/pool.js";
+import foodsRouter from "./routes/v1/foodsRouter.js";
 
 const app = new Hono();
 
-const dbPort = process.env.DB_PORT
-  ? parseInt(process.env.DB_PORT, 10)
-  : undefined;
-
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: dbPort,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
+app.route("/api/v1/foods", foodsRouter);
 
 app.get("/test", async (c) => {
   try {

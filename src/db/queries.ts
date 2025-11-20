@@ -1,12 +1,17 @@
-const pool = require("./pool");
+import { pool } from "./pool.js";
 
-async function getFoods(limit, offset) {
+export async function getFoods(limit: number, offset: number) {
   const query = `SELECT * FROM branded_open_foods ORDER BY code LIMIT $1 OFFSET $2`;
   const result = await pool.query(query, [limit, offset]);
   return result.rows;
 }
 
-async function getFoodById(upc) {
+export async function countFoods() {
+  const result = await pool.query(`SELECT COUNT(*) FROM branded_open_foods`);
+  return parseInt(result.rows[0].count, 10);
+}
+/*
+export async function getFoodById(upc) {
   const query = `
     SELECT *
     FROM branded_open_foods
@@ -15,13 +20,8 @@ async function getFoodById(upc) {
   const { rows } = await pool.query(query, [upc]);
   return rows[0];
 }
-
-async function countFoods() {
-  const result = await pool.query(`SELECT COUNT(*) FROM branded_open_foods`);
-  return parseInt(result.rows[0].count, 10);
-}
-
-async function getFoodsByCriteria(categoryKeyword, maxCalories) {
+  
+export async function getFoodsByCriteria(categoryKeyword, maxCalories) {
   const query = `
     SELECT *
     FROM branded_open_foods
@@ -34,10 +34,4 @@ async function getFoodsByCriteria(categoryKeyword, maxCalories) {
   const result = await pool.query(query, [`%${categoryKeyword}%`, maxCalories]);
   return result.rows;
 }
-
-module.exports = {
-  getFoods,
-  getFoodById,
-  countFoods,
-  getFoodsByCriteria,
-};
+*/

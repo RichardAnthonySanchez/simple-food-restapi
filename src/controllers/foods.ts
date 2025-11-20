@@ -1,36 +1,24 @@
-const CustomNotFoundError = require("../errors/CustomNotFoundError");
-const BadRequestError = require("../errors/BadRequestError");
-const path = require("path");
-const db = require("../db/queries");
+//const CustomNotFoundError = require("../errors/CustomNotFoundError");
+//const BadRequestError = require("../errors/BadRequestError");
+//const path = require("path");
+import type { Context } from "hono";
+import { getFoods, countFoods } from "../db/queries.js";
 
-async function getFoods(req, res, next) {
+export async function getFoodsController(c: Context) {
   try {
-    const page = parseInt(req.query.page, 10);
-    const limit = parseInt(req.query.limit, 10);
-
-    if (
-      (req.query.page && (isNaN(page) || page <= 0)) ||
-      (req.query.limit && (isNaN(limit) || limit <= 0))
-    ) {
-      throw new BadRequestError(
-        "'page' and 'limit' must be positive integers."
-      );
-    }
+    const page = parseInt(c.req.query("page") || "1", 10);
+    const limit = parseInt(c.req.query("limit") || "100", 10);
 
     const validPage = page || 1;
     const validLimit = limit || 100;
     const offset = (validPage - 1) * validLimit;
 
     const [foods, totalCount] = await Promise.all([
-      db.getFoods(validLimit, offset),
-      db.countFoods(),
+      getFoods(validLimit, offset),
+      countFoods(),
     ]);
 
-    if (!foods || foods.length === 0) {
-      throw new CustomNotFoundError("No food products found");
-    }
-
-    res.json({
+    return c.json({
       data: foods,
       metadata: {
         page: validPage,
@@ -40,10 +28,18 @@ async function getFoods(req, res, next) {
       },
     });
   } catch (err) {
-    next(err);
+    const message =
+      err instanceof Error ? err.message : "Unknown error occurred";
+    return c.json(
+      {
+        success: false,
+        error: message,
+      },
+      500
+    );
   }
 }
-
+/*
 async function getFoodById(req, res, next) {
   try {
     const foodId = parseInt(req.params.foodId);
@@ -108,10 +104,4 @@ async function getCalorieCalculator(req, res, next) {
   }
 }
 
-module.exports = {
-  getFoods,
-  getFoodById,
-  getFoodsByCriteria,
-  fetchFoodsByCriteria,
-  getCalorieCalculator,
-};
+*/
