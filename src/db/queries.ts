@@ -10,6 +10,13 @@ export async function countFoods() {
   const result = await pool.query(`SELECT COUNT(*) FROM branded_open_foods`);
   return parseInt(result.rows[0].count, 10);
 }
+
+export async function getMeals() {
+  const query = `SELECT * FROM meals`;
+  const result = await pool.query(query);
+  return result.rows;
+}
+
 /*
 export async function getFoodById(upc) {
   const query = `

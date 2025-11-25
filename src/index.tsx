@@ -1,13 +1,18 @@
 import { Hono } from "hono";
 import { serve } from "@hono/node-server";
 import { serveStatic } from "@hono/node-server/serve-static";
+import { cors } from "hono/cors";
 
 import { pool } from "./db/pool.js";
 import foodsRouter from "./routes/v1/foodsRouter.js";
+import mealsRouter from "./routes/v1/mealsRouter.js";
 
 const app = new Hono();
 
+app.use("/api/*", cors());
+
 app.route("/api/v1/foods", foodsRouter);
+app.route("/api/v1/meals", mealsRouter);
 
 app.get("/test", async (c) => {
   try {
